@@ -287,8 +287,6 @@ var _allMoviesReducer = __webpack_require__(/*! ../reducers/allMoviesReducer */ 
 
 __webpack_require__(/*! ./rootStyle.css */ "./app/components/rootStyle.css");
 
-var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
-
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -298,8 +296,6 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 if (true) __webpack_require__(/*! ../../secrets */ "./secrets.js");
-
-//TODO: if not needed, delete and npm uninstall.
 
 var Root = function (_Component) {
   _inherits(Root, _Component);
@@ -659,6 +655,211 @@ var allMoviesReducer = exports.allMoviesReducer = function allMoviesReducer() {
 
 /***/ }),
 
+/***/ "./app/reducers/favoritesReducer.js":
+/*!******************************************!*\
+  !*** ./app/reducers/favoritesReducer.js ***!
+  \******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.favoritesReducer = exports.resettingCart = exports.removingFromFavorites = exports.addingToFavorites = exports.gettingFavorites = undefined;
+
+var _axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
+
+var _axios2 = _interopRequireDefault(_axios);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
+var initialState = [];
+
+// Action Type:
+var GET_USER_FAVORITES = 'GET_USER_FAVORITES';
+var ADD_USER_FAVROITE = 'ADD_USER_FAVROITE';
+var REMOVE_USER_FAVORITE = 'REMOVE_USER_FAVORITE';
+var RESET_FAVORITES = 'RESET_FAVORITES';
+
+// Action creators:
+
+var gotFavorites = function gotFavorites(favorites) {
+  return { type: GET_USER_FAVORITES, favorites: favorites };
+};
+var addedToFavorites = function addedToFavorites(movie) {
+  return { type: ADD_USER_FAVROITE, movie: movie };
+};
+var removedFromFavorites = function removedFromFavorites(id) {
+  return { type: REMOVE_USER_FAVORITE, id: id };
+};
+var resettedFavorites = function resettedFavorites() {
+  return { type: RESET_FAVORITES };
+};
+
+// Thunks:
+
+var gettingFavorites = exports.gettingFavorites = function gettingFavorites() {
+  return function () {
+    var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee(dispatch) {
+      var _ref2, data;
+
+      return regeneratorRuntime.wrap(function _callee$(_context) {
+        while (1) {
+          switch (_context.prev = _context.next) {
+            case 0:
+              _context.prev = 0;
+              _context.next = 3;
+              return _axios2.default.get('/api/favorites');
+
+            case 3:
+              _ref2 = _context.sent;
+              data = _ref2.data;
+
+              dispatch(gotFavorites(data));
+              _context.next = 11;
+              break;
+
+            case 8:
+              _context.prev = 8;
+              _context.t0 = _context['catch'](0);
+
+              console.error(_context.t0);
+
+            case 11:
+            case 'end':
+              return _context.stop();
+          }
+        }
+      }, _callee, undefined, [[0, 8]]);
+    }));
+
+    return function (_x) {
+      return _ref.apply(this, arguments);
+    };
+  }();
+};
+
+var addingToFavorites = exports.addingToFavorites = function addingToFavorites(movie) {
+  return function () {
+    var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(dispatch) {
+      var _ref4, data;
+
+      return regeneratorRuntime.wrap(function _callee2$(_context2) {
+        while (1) {
+          switch (_context2.prev = _context2.next) {
+            case 0:
+              _context2.prev = 0;
+              _context2.next = 3;
+              return _axios2.default.post('/api/favorites', { movieId: movie.id });
+
+            case 3:
+              _ref4 = _context2.sent;
+              data = _ref4.data;
+
+              dispatch(addedToFavorites(data));
+              _context2.next = 11;
+              break;
+
+            case 8:
+              _context2.prev = 8;
+              _context2.t0 = _context2['catch'](0);
+
+              console.error(_context2.t0);
+
+            case 11:
+            case 'end':
+              return _context2.stop();
+          }
+        }
+      }, _callee2, undefined, [[0, 8]]);
+    }));
+
+    return function (_x2) {
+      return _ref3.apply(this, arguments);
+    };
+  }();
+};
+
+var removingFromFavorites = exports.removingFromFavorites = function removingFromFavorites(id) {
+  return function () {
+    var _ref5 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee3(dispatch) {
+      return regeneratorRuntime.wrap(function _callee3$(_context3) {
+        while (1) {
+          switch (_context3.prev = _context3.next) {
+            case 0:
+              _context3.prev = 0;
+              _context3.next = 3;
+              return _axios2.default.delete('/api/favorites', { id: id });
+
+            case 3:
+              dispatch(removedFromFavorites(id));
+              _context3.next = 9;
+              break;
+
+            case 6:
+              _context3.prev = 6;
+              _context3.t0 = _context3['catch'](0);
+
+              console.error(_context3.t0);
+
+            case 9:
+            case 'end':
+              return _context3.stop();
+          }
+        }
+      }, _callee3, undefined, [[0, 6]]);
+    }));
+
+    return function (_x3) {
+      return _ref5.apply(this, arguments);
+    };
+  }();
+};
+
+var resettingCart = exports.resettingCart = function resettingCart() {
+  return function (dispatch) {
+    try {
+      dispatch(resettedFavorites);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+};
+
+// Favorites reducer:
+
+var favoritesReducer = exports.favoritesReducer = function favoritesReducer() {
+  var state = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : initialState;
+  var action = arguments[1];
+
+  var newState = JSON.parse(JSON.stringify(state));
+  switch (action.type) {
+    case GET_USER_FAVORITES:
+      newState = action.favorites;
+      break;
+    case ADD_USER_FAVROITE:
+      newState = newState.push(action.movie);
+      break;
+    case REMOVE_USER_FAVORITE:
+      newState = newState.filter(function (favorite) {
+        return favorite.id !== action.id;
+      });
+      break;
+    case RESET_FAVORITES:
+      return initialState;
+    default:
+      return state;
+  }
+  return newState;
+};
+
+/***/ }),
+
 /***/ "./app/reducers/index.js":
 /*!*******************************!*\
   !*** ./app/reducers/index.js ***!
@@ -673,18 +874,61 @@ Object.defineProperty(exports, "__esModule", {
   value: true
 });
 
-var _redux = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
+var _usersReducer = __webpack_require__(/*! ./usersReducer */ "./app/reducers/usersReducer.js");
 
-var _allMoviesReducer = __webpack_require__(/*! ./allMoviesReducer */ "./app/reducers/allMoviesReducer.js");
+Object.keys(_usersReducer).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _usersReducer[key];
+    }
+  });
+});
 
 var _omdbMovieReducer = __webpack_require__(/*! ./omdbMovieReducer */ "./app/reducers/omdbMovieReducer.js");
 
-var _usersReducer = __webpack_require__(/*! ./usersReducer */ "./app/reducers/usersReducer.js");
+Object.keys(_omdbMovieReducer).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _omdbMovieReducer[key];
+    }
+  });
+});
+
+var _allMoviesReducer = __webpack_require__(/*! ./allMoviesReducer */ "./app/reducers/allMoviesReducer.js");
+
+Object.keys(_allMoviesReducer).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _allMoviesReducer[key];
+    }
+  });
+});
+
+var _favoritesReducer = __webpack_require__(/*! ./favoritesReducer */ "./app/reducers/favoritesReducer.js");
+
+Object.keys(_favoritesReducer).forEach(function (key) {
+  if (key === "default" || key === "__esModule") return;
+  Object.defineProperty(exports, key, {
+    enumerable: true,
+    get: function get() {
+      return _favoritesReducer[key];
+    }
+  });
+});
+
+var _redux = __webpack_require__(/*! redux */ "./node_modules/redux/es/redux.js");
 
 var rootReducer = (0, _redux.combineReducers)({
   allMovies: _allMoviesReducer.allMoviesReducer,
   omdbMovie: _omdbMovieReducer.omdbMovieReducer,
-  user: _usersReducer.usersReducer
+  user: _usersReducer.usersReducer,
+  favorites: _favoritesReducer.favoritesReducer
 });
 
 exports.default = rootReducer;

@@ -1,0 +1,119 @@
+@import url(https://fonts.googleapis.com/css?family=Special+Elite:regular);
+@import url(
+  https://fonts.googleapis.com/css?family=Oswald:200,
+  300,
+  regular,
+  500,
+  600,
+  700
+);
+
+main {
+  display: flex;
+}
+
+h1 {
+  margin: '15px';
+  font-family: 'Special Elite';
+  font-weight: normal;
+  font-size: 3rem;
+}
+
+.first {
+  text-align: left;
+  color: navajowhite;
+  position: absolute;
+  top: -20px;
+  left: 8px;
+}
+
+.second {
+  position: absolute;
+  top: -16px;
+  left: 7px;
+  color: palevioletred;
+  mix-blend-mode: darken;
+}
+
+.third {
+  position: absolute;
+  top: -13px;
+  left: 3px;
+  color: darkturquoise;
+  mix-blend-mode: color-burn;
+}
+
+h2 {
+  font-family: 'Oswald';
+  font-size: 1rem;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  height: 4rem;
+  padding: 0 1rem;
+  background-color: whitesmoke;
+  position: fixed;
+  width: 100%;
+  z-index: 1000;
+}
+
+#map-container {
+  flex: 2;
+  height: calc(100vh - 3rem);
+  overflow: hidden;
+  padding-top: 4rem;
+  overflow: hidden;
+}
+
+aside {
+  flex: 0.45;
+  display: flex;
+  flex-direction: column;
+  padding-top: 4rem;
+  width: 25px;
+  background-color: whitesmoke;
+}
+
+.panel {
+  margin: 0 1rem 1rem;
+  padding: 1rem;
+  border-radius: 0.5em;
+  background-color: #efecea;
+  color: #aaa;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);
+}
+
+.panel > div {
+  margin-top: 1.25rem;
+  margin-bottom: 1.25rem;
+}
+
+.panel > div:first-child {
+  margin-top: 0;
+}
+
+select {
+  width: 20vh;
+  font-size: 12px;
+  -webkit-appearance: menulist-button;
+}
+
+.options-btn {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  font-size: 12px;
+  background: #5f9bc0;
+  border: 0;
+  color: #fff;
+}
+
+.options-btn:hover {
+  background: #4283aa;
+}
+
+.options-btn:active {
+  background: #286090;
+}

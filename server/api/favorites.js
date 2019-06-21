@@ -25,11 +25,14 @@ router.post('/', async (req, res, next) => {
   try {
     if (req.user) {
       const { movieId } = req.body;
-      const favorite = await Favorite.create({
+      const createMe = await Favorite.create({
         movieId,
         userId: req.user.id
       });
-      res.status(201).json(favorite);
+      const newFavorite = await Favorite.findByPk(createMe.id, {
+        include: [{ model: Movies }]
+      });
+      res.status(201).json(newFavorite);
     } else {
       res.sendStatus(401);
     }
