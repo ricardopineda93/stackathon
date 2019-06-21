@@ -37,3 +37,25 @@ router.post('/', async (req, res, next) => {
     next(error);
   }
 });
+
+router.delete('/', async (req, res, next) => {
+  try {
+    if (req.user) {
+      const { id } = req.body;
+      const affectedRows = await Favorite.destroy({
+        where: {
+          id
+        }
+      });
+      if (!affectedRows) {
+        res.sendStatus(404);
+      } else {
+        res.status(204).json(affectedRows);
+      }
+    } else {
+      res.sendStatus(401);
+    }
+  } catch (error) {
+    next(error);
+  }
+});
