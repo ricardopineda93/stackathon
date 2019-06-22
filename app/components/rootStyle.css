@@ -82,6 +82,10 @@ input {
   background: #286090;
 }
 
+#selected-locations-list {
+  list-style-type: none;
+}
+
 .rmv-fvt-btn {
   height: 20px;
   width: 20px;

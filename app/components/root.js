@@ -4,6 +4,22 @@ import { connect } from 'react-redux';
 import { fetchAllMovies, removingFromFavorites } from '../reducers/index';
 import './rootStyle.css';
 if (process.env.NODE_ENV !== 'production') require('../../secrets');
+import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'react-toastify';
+toast.configure();
+
+const notifyRemovedFavorite = (movieTitle, location) =>
+  toast.warning(
+    `✌️✌️Removed "${movieTitle}" in ${location} from your favorites!`,
+    {
+      position: 'bottom-center',
+      autoClose: 3000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      draggable: true
+    }
+  );
 
 class Root extends Component {
   constructor() {
@@ -27,6 +43,11 @@ class Root extends Component {
       selectedBoro: e.target.value
     });
   };
+
+  onFavoritedClick = e => {
+    // Ugh.
+  };
+
   render() {
     const allMovies = this.props.allMovies;
     const favorites = this.props.favorites;
@@ -61,7 +82,7 @@ class Root extends Component {
                 </button> */}
               </div>
               <div>
-                <h2>Filter By Borough</h2>
+                <h2>Filter By Borough:</h2>
                 <select
                   id="borough-choices"
                   defaultValue={this.state.selectedBoro}
@@ -96,20 +117,25 @@ class Root extends Component {
             </div>
             <div className="panel" id="itinerary">
               <div>
-                <h2>My Locations</h2>
+                <h2>My Favorites:</h2>
                 <ul className="list-group" id="selected-locations-list">
                   {favorites.map(favorite => (
                     <li key={favorite.id}>
-                      {favorite.movie.film}{' '}
                       <button
                         type="button"
                         className="rmv-fvt-btn"
                         onClick={() =>
-                          this.props.removingFromFavorites(favorite.id)
+                          this.props.removingFromFavorites(favorite)
                         }
                       >
                         x
                       </button>
+                      <a
+                        id={favorite.movie.id}
+                        onClick={e => this.onFavoritedClick(e)}
+                      >
+                        "{favorite.movie.film}" / {favorite.movie.neighborhood}
+                      </a>
                     </li>
                   ))}
                 </ul>
@@ -136,13 +162,15 @@ class Root extends Component {
 
 const mapStateToProps = state => ({
   allMovies: state.allMovies.allMovies,
-  selectedMovie: state.omdbMovie.selectedMovie,
   favorites: state.favorites
 });
 
 const mapDispatchToProps = dispatch => ({
   fetchAllMovies: () => dispatch(fetchAllMovies()),
-  removingFromFavorites: id => dispatch(removingFromFavorites(id))
+  removingFromFavorites: favorite => {
+    dispatch(removingFromFavorites(favorite.id));
+    notifyRemovedFavorite(favorite.movie.film, favorite.movie.neighborhood);
+  }
 });
 
 export default connect(

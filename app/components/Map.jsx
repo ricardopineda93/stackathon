@@ -13,8 +13,28 @@ import { fetchMovie, addingToFavorites } from '../reducers/index';
 import { connect } from 'react-redux';
 import { geolocated } from 'react-geolocated';
 import { history } from '../history';
+import { toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
-//does the recenter work?
+const notifySuccessAddingFavorite = (movieTitle, location) =>
+  toast.success(`🦄 Added "${movieTitle}" in ${location} to favorites!`, {
+    position: 'bottom-center',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true
+  });
+
+const notifyAlreadyExistingFavorite = () =>
+  toast.error(`⚠️Oops! You've already favorited that!`, {
+    position: 'bottom-center',
+    autoClose: 3000,
+    hideProgressBar: false,
+    closeOnClick: true,
+    pauseOnHover: true,
+    draggable: true
+  });
 
 const defaultPosition = { lat: 40.742963, lng: -73.986683 };
 
@@ -24,12 +44,12 @@ const Map = compose(
       currentlySelected: null
     }),
     {
-      onMarkerClicked: ({ currentlySelected }) => movieId => ({
+      onMarkerClicked: () => movieId => ({
         currentlySelected: movieId
       })
     },
     {
-      removeSelected: ({ currentlySelected }) => () => ({
+      removeSelected: () => () => ({
         currentlySelected: null
       })
     }
@@ -97,12 +117,12 @@ const Map = compose(
                 {props.isLoggedIn ? (
                   <button
                     type="button"
-                    className="btn btn-primary btn-sm"
+                    className="btn btn-success btn-sm"
                     onClick={() =>
-                      props.addingToFavorites(props.favorites, movie.id)
+                      props.addingToFavorites(props.favorites, movie)
                     }
                   >
-                    Add to favorites
+                    Add to Favorites
                   </button>
                 ) : (
                   <button
@@ -129,14 +149,15 @@ const mapStateToProps = state => ({
 });
 const mapDispatchToProps = dispatch => ({
   fetchMovie: imdbId => dispatch(fetchMovie(imdbId)),
-  addingToFavorites: (favorites, movieId) => {
+  addingToFavorites: (favorites, movie) => {
     const alreadyInFavorites = favorite => {
-      return favorite.movie.id === movieId;
+      return favorite.movie.id === movie.id;
     };
     if (favorites.some(alreadyInFavorites) === false) {
-      dispatch(addingToFavorites(movieId));
+      dispatch(addingToFavorites(movie.id));
+      notifySuccessAddingFavorite(movie.film, movie.neighborhood);
     } else {
-      alert('This movie is already in your favorites!');
+      notifyAlreadyExistingFavorite();
     }
   }
 });
