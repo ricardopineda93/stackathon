@@ -1,0 +1,31 @@
+.loginPageContainer {
+  display: flex;
+  flex-direction: column;
+  padding-top: 3rem;
+  background-color: whitesmoke;
+  height: 100vh;
+  justify-content: baseline;
+  align-items: center;
+}
+
+.loginPage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 300px;
+  width: 600px;
+  border-style: solid;
+  border-width: 1.5px;
+  border-color: black;
+}
+
+form {
+  height: 200px;
+  width: 500px;
+}
+
+.divider {
+  width: 5px;
+  height: auto;
+  display: inline-block;
+}

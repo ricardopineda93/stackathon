@@ -13,19 +13,20 @@ h1 {
   font-family: 'Special Elite';
   font-weight: normal;
   font-size: 3rem;
+  align-self: center;
 }
 
 .first {
   text-align: left;
   color: navajowhite;
   position: absolute;
-  top: -20px;
+  top: -12px;
   left: 8px;
 }
 
 .second {
   position: absolute;
-  top: -16px;
+  top: -8px;
   left: 7px;
   color: palevioletred;
   mix-blend-mode: darken;
@@ -33,7 +34,7 @@ h1 {
 
 .third {
   position: absolute;
-  top: -13px;
+  top: -5px;
   left: 3px;
   color: darkturquoise;
   mix-blend-mode: color-burn;
@@ -41,11 +42,17 @@ h1 {
 
 header {
   display: flex;
-  align-items: center;
-  height: 4rem;
+  flex-direction: column;
+  justify-content: center;
+  height: 3rem;
   padding: 0 1rem;
   background-color: whitesmoke;
   position: fixed;
   width: 100%;
   z-index: 1000;
+}
+
+.nav {
+  display: block;
+  align-self: flex-end;
 }

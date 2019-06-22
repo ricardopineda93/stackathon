@@ -4,14 +4,14 @@ const initialState = [];
 
 // Action Type:
 const GET_USER_FAVORITES = 'GET_USER_FAVORITES';
-const ADD_USER_FAVROITE = 'ADD_USER_FAVROITE';
+const ADD_USER_FAVORITE = 'ADD_USER_FAVORITE';
 const REMOVE_USER_FAVORITE = 'REMOVE_USER_FAVORITE';
 const RESET_FAVORITES = 'RESET_FAVORITES';
 
 // Action creators:
 
 const gotFavorites = favorites => ({ type: GET_USER_FAVORITES, favorites });
-const addedToFavorites = movie => ({ type: ADD_USER_FAVROITE, movie });
+const addedToFavorites = movie => ({ type: ADD_USER_FAVORITE, movie });
 const removedFromFavorites = id => ({ type: REMOVE_USER_FAVORITE, id });
 const resettedFavorites = () => ({ type: RESET_FAVORITES });
 
@@ -26,9 +26,9 @@ export const gettingFavorites = () => async dispatch => {
   }
 };
 
-export const addingToFavorites = movie => async dispatch => {
+export const addingToFavorites = id => async dispatch => {
   try {
-    const { data } = await axios.post('/api/favorites', { movieId: movie.id });
+    const { data } = await axios.post('/api/favorites', { movieId: id });
     dispatch(addedToFavorites(data));
   } catch (error) {
     console.error(error);
@@ -44,7 +44,7 @@ export const removingFromFavorites = id => async dispatch => {
   }
 };
 
-export const resettingCart = () => dispatch => {
+export const resettingFavorites = () => dispatch => {
   try {
     dispatch(resettedFavorites);
   } catch (error) {
@@ -60,8 +60,8 @@ export const favoritesReducer = (state = initialState, action) => {
     case GET_USER_FAVORITES:
       newState = action.favorites;
       break;
-    case ADD_USER_FAVROITE:
-      newState = newState.push(action.movie);
+    case ADD_USER_FAVORITE:
+      newState.push(action.movie);
       break;
     case REMOVE_USER_FAVORITE:
       newState = newState.filter(favorite => favorite.id !== action.id);

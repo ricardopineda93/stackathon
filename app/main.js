@@ -3,13 +3,15 @@ import { render } from 'react-dom';
 import { Provider } from 'react-redux';
 import { Router } from 'react-router-dom';
 import { history } from './history';
+import Routes from './routes';
 import store from './store';
-import Root from './components/root';
+import { Navbar } from './components/index';
 
 render(
   <Provider store={store}>
     <Router history={history}>
-      <Root />
+      <Navbar />
+      <Routes />
     </Router>
   </Provider>,
   document.getElementById('main')

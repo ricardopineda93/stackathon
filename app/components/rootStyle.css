@@ -12,58 +12,16 @@ main {
   display: flex;
 }
 
-h1 {
-  margin: '15px';
-  font-family: 'Special Elite';
-  font-weight: normal;
-  font-size: 3rem;
-}
-
-.first {
-  text-align: left;
-  color: navajowhite;
-  position: absolute;
-  top: -20px;
-  left: 8px;
-}
-
-.second {
-  position: absolute;
-  top: -16px;
-  left: 7px;
-  color: palevioletred;
-  mix-blend-mode: darken;
-}
-
-.third {
-  position: absolute;
-  top: -13px;
-  left: 3px;
-  color: darkturquoise;
-  mix-blend-mode: color-burn;
-}
-
 h2 {
   font-family: 'Oswald';
   font-size: 1rem;
 }
 
-header {
-  display: flex;
-  align-items: center;
-  height: 4rem;
-  padding: 0 1rem;
-  background-color: whitesmoke;
-  position: fixed;
-  width: 100%;
-  z-index: 1000;
-}
-
 #map-container {
   flex: 2;
-  height: calc(100vh - 3rem);
+  height: calc(100vh - 0.5rem);
   overflow: hidden;
-  padding-top: 4rem;
+  padding-top: 3rem;
   overflow: hidden;
 }
 
@@ -71,7 +29,7 @@ aside {
   flex: 0.45;
   display: flex;
   flex-direction: column;
-  padding-top: 4rem;
+  padding-top: 3rem;
   width: 25px;
   background-color: whitesmoke;
 }
@@ -98,6 +56,10 @@ select {
   width: 20vh;
   font-size: 12px;
   -webkit-appearance: menulist-button;
+}
+
+input {
+  width: 20vh;
 }
 
 .options-btn {

@@ -112,7 +112,7 @@ var _mapStyle = __webpack_require__(/*! ../../mapStyle */ "./mapStyle.js");
 
 var _mapStyle2 = _interopRequireDefault(_mapStyle);
 
-var _omdbMovieReducer = __webpack_require__(/*! ../reducers/omdbMovieReducer */ "./app/reducers/omdbMovieReducer.js");
+var _index = __webpack_require__(/*! ../reducers/index */ "./app/reducers/index.js");
 
 var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
 
@@ -156,7 +156,7 @@ var Map = (0, _recompose.compose)((0, _recompose.withStateHandlers)(function () 
     },
     _react2.default.createElement(_reactGoogleMaps.Circle, {
       defaultCenter: props.coords ? { lat: props.coords.latitude, lng: props.coords.longitude } : defaultPosition,
-      defaultRadius: 1609.34
+      radius: 1609.34 * props.distanceFilter
     }),
     props.coords && _react2.default.createElement(_reactGoogleMaps.Marker, {
       key: 'userPosition',
@@ -226,7 +226,18 @@ var Map = (0, _recompose.compose)((0, _recompose.withStateHandlers)(function () 
                   'IMDb Link'
                 )
               ),
-              _react2.default.createElement('br', null)
+              _react2.default.createElement('br', null),
+              _react2.default.createElement('br', null),
+              _react2.default.createElement(
+                'button',
+                {
+                  type: 'button',
+                  onClick: function onClick() {
+                    return props.addingToFavorites(props.favorites, movie.id);
+                  }
+                },
+                'Add to favorites'
+              )
             )
           )
         )
@@ -237,13 +248,22 @@ var Map = (0, _recompose.compose)((0, _recompose.withStateHandlers)(function () 
 
 var mapStateToProps = function mapStateToProps(state) {
   return {
-    selectedMovie: state.omdbMovie.selectedMovie
+    selectedMovie: state.omdbMovie.selectedMovie,
+    favorites: state.favorites
   };
 };
 var mapDispatchToProps = function mapDispatchToProps(dispatch) {
   return {
     fetchMovie: function fetchMovie(imdbId) {
-      return dispatch((0, _omdbMovieReducer.fetchMovie)(imdbId));
+      return dispatch((0, _index.fetchMovie)(imdbId));
+    },
+    addingToFavorites: function addingToFavorites(favorites, movieId) {
+      var alreadyInFavorites = function alreadyInFavorites(favorite) {
+        return favorite.movie.id === movieId;
+      };
+      if (favorites.some(alreadyInFavorites) === false) {
+        dispatch((0, _index.addingToFavorites)(movieId));
+      }
     }
   };
 };
@@ -254,6 +274,377 @@ exports.default = (0, _reactGeolocated.geolocated)({
   },
   userDecisionTimeout: 5000
 })((0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Map));
+
+/***/ }),
+
+/***/ "./app/components/auth-form.jsx":
+/*!**************************************!*\
+  !*** ./app/components/auth-form.jsx ***!
+  \**************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+exports.Signup = exports.Login = undefined;
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+var _propTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _index = __webpack_require__(/*! ../reducers/index */ "./app/reducers/index.js");
+
+__webpack_require__(/*! ./auth-formStyle.css */ "./app/components/auth-formStyle.css");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var AuthForm = function AuthForm(props) {
+  var name = props.name,
+      displayName = props.displayName,
+      handleSubmit = props.handleSubmit,
+      error = props.error;
+
+
+  return _react2.default.createElement(
+    'div',
+    { className: 'loginPageContainer' },
+    _react2.default.createElement(
+      'h3',
+      null,
+      ' ',
+      name === 'login' ? 'Welcome back.' : 'Sign on up.',
+      ' '
+    ),
+    _react2.default.createElement(
+      'div',
+      { className: 'loginPage' },
+      _react2.default.createElement(
+        'form',
+        { onSubmit: handleSubmit, name: name, id: 'auth-form' },
+        _react2.default.createElement(
+          'div',
+          { className: 'form-group' },
+          _react2.default.createElement(
+            'label',
+            { htmlFor: 'email' },
+            _react2.default.createElement(
+              'small',
+              null,
+              'Email'
+            )
+          ),
+          _react2.default.createElement('input', {
+            className: 'form-control',
+            name: 'email',
+            type: 'text',
+            placeholder: 'Email'
+          })
+        ),
+        _react2.default.createElement(
+          'div',
+          { className: 'form-group' },
+          _react2.default.createElement(
+            'label',
+            { htmlFor: 'password' },
+            _react2.default.createElement(
+              'small',
+              null,
+              'Password:'
+            )
+          ),
+          _react2.default.createElement('input', {
+            className: 'form-control',
+            name: 'password',
+            type: 'password',
+            placeholder: 'Password'
+          })
+        ),
+        _react2.default.createElement(
+          'div',
+          null,
+          _react2.default.createElement(
+            'button',
+            { className: 'btn btn-success', type: 'submit' },
+            displayName
+          ),
+          _react2.default.createElement('div', { className: 'divider' }),
+          _react2.default.createElement(
+            'a',
+            { href: '/auth/google' },
+            _react2.default.createElement(
+              'button',
+              { className: 'btn btn-danger', type: 'button' },
+              displayName,
+              ' with Google'
+            )
+          )
+        ),
+        error && error.response && _react2.default.createElement(
+          'div',
+          null,
+          ' ',
+          error.response.data,
+          ' '
+        )
+      )
+    )
+  );
+};
+
+var mapLogin = function mapLogin(state) {
+  return {
+    name: 'login',
+    displayName: 'Login',
+    error: state.user.error
+  };
+};
+
+var mapSignup = function mapSignup(state) {
+  return {
+    name: 'signup',
+    displayName: 'Sign Up',
+    error: state.user.error
+  };
+};
+
+var mapDispatch = function mapDispatch(dispatch) {
+  return {
+    handleSubmit: function handleSubmit(evt) {
+      evt.preventDefault();
+      var formName = evt.target.name;
+      var email = evt.target.email.value;
+      var password = evt.target.password.value;
+      dispatch((0, _index.auth)(email, password, formName));
+    }
+  };
+};
+
+var Login = exports.Login = (0, _reactRedux.connect)(mapLogin, mapDispatch)(AuthForm);
+var Signup = exports.Signup = (0, _reactRedux.connect)(mapSignup, mapDispatch)(AuthForm);
+
+AuthForm.propTypes = {
+  name: _propTypes2.default.string.isRequired,
+  displayName: _propTypes2.default.string.isRequired,
+  handleSubmit: _propTypes2.default.func.isRequired,
+  error: _propTypes2.default.object
+};
+
+/***/ }),
+
+/***/ "./app/components/auth-formStyle.css":
+/*!*******************************************!*\
+  !*** ./app/components/auth-formStyle.css ***!
+  \*******************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../node_modules/css-loader/dist/cjs.js!./auth-formStyle.css */ "./node_modules/css-loader/dist/cjs.js!./app/components/auth-formStyle.css");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
+
+/***/ }),
+
+/***/ "./app/components/index.js":
+/*!*********************************!*\
+  !*** ./app/components/index.js ***!
+  \*********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _navbar = __webpack_require__(/*! ./navbar */ "./app/components/navbar.jsx");
+
+Object.defineProperty(exports, 'Navbar', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_navbar).default;
+  }
+});
+
+var _root = __webpack_require__(/*! ./root */ "./app/components/root.js");
+
+Object.defineProperty(exports, 'Root', {
+  enumerable: true,
+  get: function get() {
+    return _interopRequireDefault(_root).default;
+  }
+});
+
+var _authForm = __webpack_require__(/*! ./auth-form */ "./app/components/auth-form.jsx");
+
+Object.defineProperty(exports, 'Login', {
+  enumerable: true,
+  get: function get() {
+    return _authForm.Login;
+  }
+});
+Object.defineProperty(exports, 'Signup', {
+  enumerable: true,
+  get: function get() {
+    return _authForm.Signup;
+  }
+});
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/***/ }),
+
+/***/ "./app/components/navbar.jsx":
+/*!***********************************!*\
+  !*** ./app/components/navbar.jsx ***!
+  \***********************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+
+var _index = __webpack_require__(/*! ../reducers/index */ "./app/reducers/index.js");
+
+__webpack_require__(/*! ./navbarStyle.css */ "./app/components/navbarStyle.css");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+var Navbar = function Navbar(_ref) {
+  var handleLogOut = _ref.handleLogOut,
+      isLoggedIn = _ref.isLoggedIn;
+  return _react2.default.createElement(
+    'div',
+    { id: 'container' },
+    _react2.default.createElement(
+      'header',
+      null,
+      _react2.default.createElement(
+        'h1',
+        { className: 'first' },
+        'nyscene.'
+      ),
+      _react2.default.createElement(
+        'h1',
+        { className: 'second' },
+        'nyscene.'
+      ),
+      _react2.default.createElement(
+        'h1',
+        { className: 'third' },
+        'nyscene.'
+      ),
+      isLoggedIn ? _react2.default.createElement(
+        'div',
+        { className: 'nav' },
+        _react2.default.createElement(
+          'a',
+          { href: '#', onClick: handleLogOut, id: 'brand-name' },
+          'Logout'
+        )
+      ) : _react2.default.createElement(
+        'div',
+        { className: 'nav' },
+        _react2.default.createElement(
+          _reactRouterDom.Link,
+          { to: 'login' },
+          'Log In'
+        ),
+        ' | ',
+        _react2.default.createElement(
+          _reactRouterDom.Link,
+          { to: 'signup' },
+          'Sign Up'
+        )
+      )
+    )
+  );
+};
+
+var mapStateToProps = function mapStateToProps(state) {
+  return { isLoggedIn: !!state.user.id };
+};
+
+var mapDispatchToProps = function mapDispatchToProps(dispatch) {
+  return {
+    handleLogOut: function handleLogOut() {
+      dispatch((0, _index.logout)());
+      dispatch((0, _index.resettingFavorites)());
+    }
+  };
+};
+
+exports.default = (0, _reactRedux.connect)(mapStateToProps, mapDispatchToProps)(Navbar);
+
+/***/ }),
+
+/***/ "./app/components/navbarStyle.css":
+/*!****************************************!*\
+  !*** ./app/components/navbarStyle.css ***!
+  \****************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+var content = __webpack_require__(/*! !../../node_modules/css-loader/dist/cjs.js!./navbarStyle.css */ "./node_modules/css-loader/dist/cjs.js!./app/components/navbarStyle.css");
+
+if(typeof content === 'string') content = [[module.i, content, '']];
+
+var transform;
+var insertInto;
+
+
+
+var options = {"hmr":true}
+
+options.transform = transform
+options.insertInto = undefined;
+
+var update = __webpack_require__(/*! ../../node_modules/style-loader/lib/addStyles.js */ "./node_modules/style-loader/lib/addStyles.js")(content, options);
+
+if(content.locals) module.exports = content.locals;
+
+if(false) {}
 
 /***/ }),
 
@@ -303,40 +694,35 @@ var Root = function (_Component) {
   function Root() {
     _classCallCheck(this, Root);
 
-    return _possibleConstructorReturn(this, (Root.__proto__ || Object.getPrototypeOf(Root)).apply(this, arguments));
+    var _this = _possibleConstructorReturn(this, (Root.__proto__ || Object.getPrototypeOf(Root)).call(this));
+
+    _this.onSliderChange = function (e) {
+      _this.setState({
+        distanceFilter: e.target.value
+      });
+    };
+
+    _this.state = {
+      distanceFilter: 0.5
+    };
+    _this.onSliderChange = _this.onSliderChange.bind(_this);
+    return _this;
   }
+  // componentDidMount() {
+  //   this.setState({ distanceFilter: +this.numInput.value });
+  // }
 
   _createClass(Root, [{
-    key: 'componentDidMount',
-    value: function componentDidMount() {
-      this.props.fetchAllMovies();
-    }
-  }, {
     key: 'render',
     value: function render() {
+      var _this2 = this;
+
       var allMovies = this.props.allMovies;
+      var favorites = this.props.favorites;
+
       return _react2.default.createElement(
         'div',
         { id: 'container' },
-        _react2.default.createElement(
-          'header',
-          null,
-          _react2.default.createElement(
-            'h1',
-            { className: 'first' },
-            'nyscene.'
-          ),
-          _react2.default.createElement(
-            'h1',
-            { className: 'second' },
-            'nyscene.'
-          ),
-          _react2.default.createElement(
-            'h1',
-            { className: 'third' },
-            'nyscene.'
-          )
-        ),
         _react2.default.createElement(
           'main',
           null,
@@ -352,21 +738,34 @@ var Root = function (_Component) {
                 _react2.default.createElement(
                   'h2',
                   null,
-                  'Filter'
+                  'Radius: ',
+                  this.state.distanceFilter,
+                  ' mile(s)'
                 ),
+                _react2.default.createElement('input', {
+                  type: 'range',
+                  id: 'distance-option',
+                  name: 'distance-option',
+                  list: 'tickmarks',
+                  min: '0.5',
+                  max: '2.5',
+                  step: '0.5',
+                  value: this.state.distanceFilter
+                  // ref={input => {
+                  //   this.numInput = input;
+                  // }}
+                  , onChange: function onChange(e) {
+                    return _this2.onSliderChange(e);
+                  }
+                }),
                 _react2.default.createElement(
-                  'select',
-                  { id: 'distance-option' },
-                  _react2.default.createElement(
-                    'option',
-                    null,
-                    'By Distance'
-                  )
-                ),
-                _react2.default.createElement(
-                  'button',
-                  { id: 'distance-btn', className: 'options-btn' },
-                  '+'
+                  'datalist',
+                  { id: 'tickmarks' },
+                  _react2.default.createElement('option', { value: '0.5' }),
+                  _react2.default.createElement('option', { value: '1.0' }),
+                  _react2.default.createElement('option', { value: '1.5' }),
+                  _react2.default.createElement('option', { value: '2.0' }),
+                  _react2.default.createElement('option', { value: '2.5' })
                 )
               ),
               _react2.default.createElement(
@@ -388,7 +787,7 @@ var Root = function (_Component) {
                 ),
                 _react2.default.createElement(
                   'button',
-                  { id: 'borough-add', className: 'options-btn' },
+                  { id: 'borough-add', type: 'button', className: 'options-btn' },
                   '+'
                 )
               ),
@@ -411,7 +810,11 @@ var Root = function (_Component) {
                 ),
                 _react2.default.createElement(
                   'button',
-                  { id: 'neighborhood-add', className: 'options-btn' },
+                  {
+                    id: 'neighborhood-add',
+                    type: 'button',
+                    className: 'options-btn'
+                  },
                   '+'
                 )
               )
@@ -427,7 +830,17 @@ var Root = function (_Component) {
                   null,
                   'My Locations'
                 ),
-                _react2.default.createElement('ul', { className: 'list-group', id: 'selected-locations-list' })
+                _react2.default.createElement(
+                  'ul',
+                  { className: 'list-group', id: 'selected-locations-list' },
+                  favorites.map(function (favorite) {
+                    return _react2.default.createElement(
+                      'li',
+                      { key: favorite.id },
+                      favorite.movie.film
+                    );
+                  })
+                )
               )
             )
           ),
@@ -439,7 +852,8 @@ var Root = function (_Component) {
               googleMapURL: 'https://maps.googleapis.com/maps/api/js?key=' + process.env.GOOGLE_API_KEY + '&v=3.exp&libraries=geometry,drawing,places',
               loadingElement: _react2.default.createElement('div', { style: { height: '100%' } }),
               containerElement: _react2.default.createElement('div', { style: { height: '100%' } }),
-              mapElement: _react2.default.createElement('div', { style: { height: '100%' } })
+              mapElement: _react2.default.createElement('div', { style: { height: '100%' } }),
+              distanceFilter: this.state.distanceFilter
             })
           )
         )
@@ -453,7 +867,8 @@ var Root = function (_Component) {
 var mapStateToProps = function mapStateToProps(state) {
   return {
     allMovies: state.allMovies.allMovies,
-    selectedMovie: state.omdbMovie.selectedMovie
+    selectedMovie: state.omdbMovie.selectedMovie,
+    favorites: state.favorites
   };
 };
 
@@ -543,13 +958,15 @@ var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_module
 
 var _history = __webpack_require__(/*! ./history */ "./app/history.js");
 
+var _routes = __webpack_require__(/*! ./routes */ "./app/routes.js");
+
+var _routes2 = _interopRequireDefault(_routes);
+
 var _store = __webpack_require__(/*! ./store */ "./app/store.js");
 
 var _store2 = _interopRequireDefault(_store);
 
-var _root = __webpack_require__(/*! ./components/root */ "./app/components/root.js");
-
-var _root2 = _interopRequireDefault(_root);
+var _index = __webpack_require__(/*! ./components/index */ "./app/components/index.js");
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -559,7 +976,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
   _react2.default.createElement(
     _reactRouterDom.Router,
     { history: _history.history },
-    _react2.default.createElement(_root2.default, null)
+    _react2.default.createElement(_index.Navbar, null),
+    _react2.default.createElement(_routes2.default, null)
   )
 ), document.getElementById('main'));
 
@@ -668,7 +1086,7 @@ var allMoviesReducer = exports.allMoviesReducer = function allMoviesReducer() {
 Object.defineProperty(exports, "__esModule", {
   value: true
 });
-exports.favoritesReducer = exports.resettingCart = exports.removingFromFavorites = exports.addingToFavorites = exports.gettingFavorites = undefined;
+exports.favoritesReducer = exports.resettingFavorites = exports.removingFromFavorites = exports.addingToFavorites = exports.gettingFavorites = undefined;
 
 var _axios = __webpack_require__(/*! axios */ "./node_modules/axios/index.js");
 
@@ -682,7 +1100,7 @@ var initialState = [];
 
 // Action Type:
 var GET_USER_FAVORITES = 'GET_USER_FAVORITES';
-var ADD_USER_FAVROITE = 'ADD_USER_FAVROITE';
+var ADD_USER_FAVORITE = 'ADD_USER_FAVORITE';
 var REMOVE_USER_FAVORITE = 'REMOVE_USER_FAVORITE';
 var RESET_FAVORITES = 'RESET_FAVORITES';
 
@@ -692,7 +1110,7 @@ var gotFavorites = function gotFavorites(favorites) {
   return { type: GET_USER_FAVORITES, favorites: favorites };
 };
 var addedToFavorites = function addedToFavorites(movie) {
-  return { type: ADD_USER_FAVROITE, movie: movie };
+  return { type: ADD_USER_FAVORITE, movie: movie };
 };
 var removedFromFavorites = function removedFromFavorites(id) {
   return { type: REMOVE_USER_FAVORITE, id: id };
@@ -744,7 +1162,7 @@ var gettingFavorites = exports.gettingFavorites = function gettingFavorites() {
   }();
 };
 
-var addingToFavorites = exports.addingToFavorites = function addingToFavorites(movie) {
+var addingToFavorites = exports.addingToFavorites = function addingToFavorites(id) {
   return function () {
     var _ref3 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(dispatch) {
       var _ref4, data;
@@ -755,7 +1173,7 @@ var addingToFavorites = exports.addingToFavorites = function addingToFavorites(m
             case 0:
               _context2.prev = 0;
               _context2.next = 3;
-              return _axios2.default.post('/api/favorites', { movieId: movie.id });
+              return _axios2.default.post('/api/favorites', { movieId: id });
 
             case 3:
               _ref4 = _context2.sent;
@@ -821,7 +1239,7 @@ var removingFromFavorites = exports.removingFromFavorites = function removingFro
   }();
 };
 
-var resettingCart = exports.resettingCart = function resettingCart() {
+var resettingFavorites = exports.resettingFavorites = function resettingFavorites() {
   return function (dispatch) {
     try {
       dispatch(resettedFavorites);
@@ -842,8 +1260,8 @@ var favoritesReducer = exports.favoritesReducer = function favoritesReducer() {
     case GET_USER_FAVORITES:
       newState = action.favorites;
       break;
-    case ADD_USER_FAVROITE:
-      newState = newState.push(action.movie);
+    case ADD_USER_FAVORITE:
+      newState.push(action.movie);
       break;
     case REMOVE_USER_FAVORITE:
       newState = newState.filter(function (favorite) {
@@ -1130,7 +1548,7 @@ var auth = exports.auth = function auth(email, password, method) {
 
               try {
                 dispatch(getUser(res.data));
-                _history.history.push('/home');
+                _history.history.push('/');
               } catch (dispatchHistoryError) {
                 console.error(dispatchHistoryError);
               }
@@ -1162,7 +1580,7 @@ var logout = exports.logout = function logout() {
 
             case 3:
               dispatch(removeUser());
-              _history.history.push('/');
+              _history.history.push('/login');
               _context3.next = 10;
               break;
 
@@ -1199,6 +1617,187 @@ var usersReducer = exports.usersReducer = function usersReducer() {
     default:
       return state;
   }
+};
+
+/***/ }),
+
+/***/ "./app/routes.js":
+/*!***********************!*\
+  !*** ./app/routes.js ***!
+  \***********************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+var _react = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+
+var _react2 = _interopRequireDefault(_react);
+
+var _reactRedux = __webpack_require__(/*! react-redux */ "./node_modules/react-redux/es/index.js");
+
+var _reactRouterDom = __webpack_require__(/*! react-router-dom */ "./node_modules/react-router-dom/esm/react-router-dom.js");
+
+var _propTypes = __webpack_require__(/*! prop-types */ "./node_modules/prop-types/index.js");
+
+var _propTypes2 = _interopRequireDefault(_propTypes);
+
+var _index = __webpack_require__(/*! ./components/index */ "./app/components/index.js");
+
+var _index2 = __webpack_require__(/*! ./reducers/index */ "./app/reducers/index.js");
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+function _asyncToGenerator(fn) { return function () { var gen = fn.apply(this, arguments); return new Promise(function (resolve, reject) { function step(key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { return Promise.resolve(value).then(function (value) { step("next", value); }, function (err) { step("throw", err); }); } } return step("next"); }); }; }
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+var Routes = function (_Component) {
+  _inherits(Routes, _Component);
+
+  function Routes() {
+    _classCallCheck(this, Routes);
+
+    return _possibleConstructorReturn(this, (Routes.__proto__ || Object.getPrototypeOf(Routes)).apply(this, arguments));
+  }
+
+  _createClass(Routes, [{
+    key: 'componentDidMount',
+    value: function () {
+      var _ref = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee() {
+        return regeneratorRuntime.wrap(function _callee$(_context) {
+          while (1) {
+            switch (_context.prev = _context.next) {
+              case 0:
+                _context.next = 2;
+                return this.props.loadInitialData();
+
+              case 2:
+                _context.next = 4;
+                return this.props.fetchAllMovies();
+
+              case 4:
+                if (!this.props.isLoggedIn) {
+                  _context.next = 7;
+                  break;
+                }
+
+                _context.next = 7;
+                return this.props.gettingFavorites();
+
+              case 7:
+              case 'end':
+                return _context.stop();
+            }
+          }
+        }, _callee, this);
+      }));
+
+      function componentDidMount() {
+        return _ref.apply(this, arguments);
+      }
+
+      return componentDidMount;
+    }()
+  }, {
+    key: 'componentDidUpdate',
+    value: function () {
+      var _ref2 = _asyncToGenerator( /*#__PURE__*/regeneratorRuntime.mark(function _callee2(prevProps) {
+        return regeneratorRuntime.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                if (!(this.props.isLoggedIn && prevProps.isLoggedIn === false)) {
+                  _context2.next = 3;
+                  break;
+                }
+
+                _context2.next = 3;
+                return this.props.gettingFavorites();
+
+              case 3:
+              case 'end':
+                return _context2.stop();
+            }
+          }
+        }, _callee2, this);
+      }));
+
+      function componentDidUpdate(_x) {
+        return _ref2.apply(this, arguments);
+      }
+
+      return componentDidUpdate;
+    }()
+  }, {
+    key: 'render',
+    value: function render() {
+      var isLoggedIn = this.props.isLoggedIn;
+
+
+      return _react2.default.createElement(
+        _reactRouterDom.Switch,
+        null,
+        _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/', component: _index.Root }),
+        !isLoggedIn && _react2.default.createElement(
+          _reactRouterDom.Switch,
+          null,
+          _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/login', component: _index.Login }),
+          _react2.default.createElement(_reactRouterDom.Route, { exact: true, path: '/signup', component: _index.Signup })
+        ),
+        _react2.default.createElement(_reactRouterDom.Route, { component: _index.Root })
+      );
+    }
+  }]);
+
+  return Routes;
+}(_react.Component);
+
+var mapState = function mapState(state) {
+  return {
+    // Being 'logged in' for our purposes will be defined has having a state.user that has a truthy id.
+    // Otherwise, state.user will be an empty object, and state.user.id will be falsey
+    isLoggedIn: !!state.user.id
+  };
+};
+
+var mapDispatch = function mapDispatch(dispatch) {
+  return {
+    loadInitialData: function loadInitialData() {
+      dispatch((0, _index2.me)());
+    },
+    fetchAllMovies: function fetchAllMovies() {
+      dispatch((0, _index2.fetchAllMovies)());
+    },
+    gettingFavorites: function gettingFavorites() {
+      dispatch((0, _index2.gettingFavorites)());
+    }
+  };
+};
+
+// The `withRouter` wrapper makes sure that updates are not blocked
+// when the url changes
+exports.default = (0, _reactRouterDom.withRouter)((0, _reactRedux.connect)(mapState, mapDispatch)(Routes));
+
+/**
+ * PROP TYPES
+ */
+
+Routes.propTypes = {
+  loadInitialData: _propTypes2.default.func.isRequired,
+  gettingFavorites: _propTypes2.default.func.isRequired,
+  isLoggedIn: _propTypes2.default.bool.isRequired
 };
 
 /***/ }),
@@ -17017,6 +17616,40 @@ module.exports = exports['default'];
 
 /***/ }),
 
+/***/ "./node_modules/css-loader/dist/cjs.js!./app/components/auth-formStyle.css":
+/*!*********************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./app/components/auth-formStyle.css ***!
+  \*********************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
+// Module
+exports.push([module.i, ".loginPageContainer {\n  display: flex;\n  flex-direction: column;\n  padding-top: 3rem;\n  background-color: whitesmoke;\n  height: 100vh;\n  justify-content: baseline;\n  align-items: center;\n}\n\n.loginPage {\n  display: flex;\n  justify-content: center;\n  align-items: center;\n  height: 300px;\n  width: 600px;\n  border-style: solid;\n  border-width: 1.5px;\n  border-color: black;\n}\n\nform {\n  height: 200px;\n  width: 500px;\n}\n\n.divider {\n  width: 5px;\n  height: auto;\n  display: inline-block;\n}\n", ""]);
+
+
+
+/***/ }),
+
+/***/ "./node_modules/css-loader/dist/cjs.js!./app/components/navbarStyle.css":
+/*!******************************************************************************!*\
+  !*** ./node_modules/css-loader/dist/cjs.js!./app/components/navbarStyle.css ***!
+  \******************************************************************************/
+/*! no static exports found */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(/*! ../../node_modules/css-loader/dist/runtime/api.js */ "./node_modules/css-loader/dist/runtime/api.js")(false);
+// Imports
+exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Special+Elite:regular);", ""]);
+exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Oswald:200,\n  300,\n  regular,\n  500,\n  600,\n  700);", ""]);
+
+// Module
+exports.push([module.i, "h1 {\n  margin: '15px';\n  font-family: 'Special Elite';\n  font-weight: normal;\n  font-size: 3rem;\n  align-self: center;\n}\n\n.first {\n  text-align: left;\n  color: navajowhite;\n  position: absolute;\n  top: -12px;\n  left: 8px;\n}\n\n.second {\n  position: absolute;\n  top: -8px;\n  left: 7px;\n  color: palevioletred;\n  mix-blend-mode: darken;\n}\n\n.third {\n  position: absolute;\n  top: -5px;\n  left: 3px;\n  color: darkturquoise;\n  mix-blend-mode: color-burn;\n}\n\nheader {\n  display: flex;\n  flex-direction: column;\n  justify-content: center;\n  height: 3rem;\n  padding: 0 1rem;\n  background-color: whitesmoke;\n  position: fixed;\n  width: 100%;\n  z-index: 1000;\n}\n\n.nav {\n  display: block;\n  align-self: flex-end;\n}\n", ""]);
+
+
+
+/***/ }),
+
 /***/ "./node_modules/css-loader/dist/cjs.js!./app/components/rootStyle.css":
 /*!****************************************************************************!*\
   !*** ./node_modules/css-loader/dist/cjs.js!./app/components/rootStyle.css ***!
@@ -17030,7 +17663,7 @@ exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Spe
 exports.push([module.i, "@import url(https://fonts.googleapis.com/css?family=Oswald:200,\n  300,\n  regular,\n  500,\n  600,\n  700);", ""]);
 
 // Module
-exports.push([module.i, "main {\n  display: flex;\n}\n\nh1 {\n  margin: '15px';\n  font-family: 'Special Elite';\n  font-weight: normal;\n  font-size: 3rem;\n}\n\n.first {\n  text-align: left;\n  color: navajowhite;\n  position: absolute;\n  top: -20px;\n  left: 8px;\n}\n\n.second {\n  position: absolute;\n  top: -16px;\n  left: 7px;\n  color: palevioletred;\n  mix-blend-mode: darken;\n}\n\n.third {\n  position: absolute;\n  top: -13px;\n  left: 3px;\n  color: darkturquoise;\n  mix-blend-mode: color-burn;\n}\n\nh2 {\n  font-family: 'Oswald';\n  font-size: 1rem;\n}\n\nheader {\n  display: flex;\n  align-items: center;\n  height: 4rem;\n  padding: 0 1rem;\n  background-color: whitesmoke;\n  position: fixed;\n  width: 100%;\n  z-index: 1000;\n}\n\n#map-container {\n  flex: 2;\n  height: calc(100vh - 3rem);\n  overflow: hidden;\n  padding-top: 4rem;\n  overflow: hidden;\n}\n\naside {\n  flex: 0.45;\n  display: flex;\n  flex-direction: column;\n  padding-top: 4rem;\n  width: 25px;\n  background-color: whitesmoke;\n}\n\n.panel {\n  margin: 0 1rem 1rem;\n  padding: 1rem;\n  border-radius: 0.5em;\n  background-color: #efecea;\n  color: #aaa;\n  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);\n}\n\n.panel > div {\n  margin-top: 1.25rem;\n  margin-bottom: 1.25rem;\n}\n\n.panel > div:first-child {\n  margin-top: 0;\n}\n\nselect {\n  width: 20vh;\n  font-size: 12px;\n  -webkit-appearance: menulist-button;\n}\n\n.options-btn {\n  height: 20px;\n  width: 20px;\n  border-radius: 50%;\n  font-size: 12px;\n  background: #5f9bc0;\n  border: 0;\n  color: #fff;\n}\n\n.options-btn:hover {\n  background: #4283aa;\n}\n\n.options-btn:active {\n  background: #286090;\n}\n", ""]);
+exports.push([module.i, "main {\n  display: flex;\n}\n\nh2 {\n  font-family: 'Oswald';\n  font-size: 1rem;\n}\n\n#map-container {\n  flex: 2;\n  height: calc(100vh - 0.5rem);\n  overflow: hidden;\n  padding-top: 3rem;\n  overflow: hidden;\n}\n\naside {\n  flex: 0.45;\n  display: flex;\n  flex-direction: column;\n  padding-top: 3rem;\n  width: 25px;\n  background-color: whitesmoke;\n}\n\n.panel {\n  margin: 0 1rem 1rem;\n  padding: 1rem;\n  border-radius: 0.5em;\n  background-color: #efecea;\n  color: #aaa;\n  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.12), 0 1px 2px rgba(0, 0, 0, 0.24);\n}\n\n.panel > div {\n  margin-top: 1.25rem;\n  margin-bottom: 1.25rem;\n}\n\n.panel > div:first-child {\n  margin-top: 0;\n}\n\nselect {\n  width: 20vh;\n  font-size: 12px;\n  -webkit-appearance: menulist-button;\n}\n\ninput {\n  width: 20vh;\n}\n\n.options-btn {\n  height: 20px;\n  width: 20px;\n  border-radius: 50%;\n  font-size: 12px;\n  background: #5f9bc0;\n  border: 0;\n  color: #fff;\n}\n\n.options-btn:hover {\n  background: #4283aa;\n}\n\n.options-btn:active {\n  background: #286090;\n}\n", ""]);
 
 
 

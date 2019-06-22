@@ -9,7 +9,7 @@ import {
   Circle
 } from 'react-google-maps';
 import mapStyles from '../../mapStyle';
-import { fetchMovie } from '../reducers/omdbMovieReducer';
+import { fetchMovie, addingToFavorites } from '../reducers/index';
 import { connect } from 'react-redux';
 import { geolocated } from 'react-geolocated';
 
@@ -51,7 +51,7 @@ const Map = compose(
           ? { lat: props.coords.latitude, lng: props.coords.longitude }
           : defaultPosition
       }
-      defaultRadius={1609.34}
+      radius={1609.34 * props.distanceFilter}
     />
     {props.coords && (
       <Marker
@@ -92,6 +92,15 @@ const Map = compose(
                   <small>IMDb Link</small>
                 </a>
                 <br />
+                <br />
+                <button
+                  type="button"
+                  onClick={() =>
+                    props.addingToFavorites(props.favorites, movie.id)
+                  }
+                >
+                  Add to favorites
+                </button>
               </p>
             </div>
           </InfoWindow>
@@ -102,10 +111,19 @@ const Map = compose(
 ));
 
 const mapStateToProps = state => ({
-  selectedMovie: state.omdbMovie.selectedMovie
+  selectedMovie: state.omdbMovie.selectedMovie,
+  favorites: state.favorites
 });
 const mapDispatchToProps = dispatch => ({
-  fetchMovie: imdbId => dispatch(fetchMovie(imdbId))
+  fetchMovie: imdbId => dispatch(fetchMovie(imdbId)),
+  addingToFavorites: (favorites, movieId) => {
+    const alreadyInFavorites = favorite => {
+      return favorite.movie.id === movieId;
+    };
+    if (favorites.some(alreadyInFavorites) === false) {
+      dispatch(addingToFavorites(movieId));
+    }
+  }
 });
 
 export default geolocated({
