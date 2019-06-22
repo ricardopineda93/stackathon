@@ -35,6 +35,8 @@ aside {
 }
 
 .panel {
+  display: flex;
+  flex-direction: column;
   margin: 0 1rem 1rem;
   padding: 1rem;
   border-radius: 0.5em;
@@ -78,4 +80,23 @@ input {
 
 .options-btn:active {
   background: #286090;
+}
+
+.rmv-fvt-btn {
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  font-size: 12px;
+  background: maroon;
+  border: 0;
+  color: #fff;
+  align-self: flex-end;
+}
+
+.rmv-fvt-btn:hover {
+  background: red;
+}
+
+.rmv-fvt-btn:active {
+  background: brown;
 }

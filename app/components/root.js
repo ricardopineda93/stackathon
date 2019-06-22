@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import Map from './Map';
 import { connect } from 'react-redux';
-import { fetchAllMovies } from '../reducers/allMoviesReducer';
+import { fetchAllMovies, removingFromFavorites } from '../reducers/index';
 import './rootStyle.css';
 if (process.env.NODE_ENV !== 'production') require('../../secrets');
 
@@ -9,17 +9,22 @@ class Root extends Component {
   constructor() {
     super();
     this.state = {
-      distanceFilter: 0.5
+      distanceFilter: 0.5,
+      selectedBoro: 'All Boroughs'
     };
     this.onSliderChange = this.onSliderChange.bind(this);
+    this.onBoroSelectorChange = this.onBoroSelectorChange.bind(this);
   }
-  // componentDidMount() {
-  //   this.setState({ distanceFilter: +this.numInput.value });
-  // }
 
   onSliderChange = e => {
     this.setState({
       distanceFilter: e.target.value
+    });
+  };
+
+  onBoroSelectorChange = e => {
+    this.setState({
+      selectedBoro: e.target.value
     });
   };
   render() {
@@ -42,9 +47,6 @@ class Root extends Component {
                   max="2.5"
                   step="0.5"
                   value={this.state.distanceFilter}
-                  // ref={input => {
-                  //   this.numInput = input;
-                  // }}
                   onChange={e => this.onSliderChange(e)}
                 />
                 <datalist id="tickmarks">
@@ -59,9 +61,20 @@ class Root extends Component {
                 </button> */}
               </div>
               <div>
-                <h2>Filter</h2>
-                <select id="borough-choices">
-                  <option>By Borough</option>
+                <h2>Filter By Borough</h2>
+                <select
+                  id="borough-choices"
+                  defaultValue={this.state.selectedBoro}
+                  onChange={e => {
+                    this.onBoroSelectorChange(e);
+                  }}
+                >
+                  <option>All Boroughs</option>
+                  <option>Manhattan</option>
+                  <option>Queens</option>
+                  <option>Brooklyn</option>
+                  <option>The Bronx</option>
+                  <option>Staten Island</option>
                 </select>
                 <button id="borough-add" type="button" className="options-btn">
                   +
@@ -86,7 +99,18 @@ class Root extends Component {
                 <h2>My Locations</h2>
                 <ul className="list-group" id="selected-locations-list">
                   {favorites.map(favorite => (
-                    <li key={favorite.id}>{favorite.movie.film}</li>
+                    <li key={favorite.id}>
+                      {favorite.movie.film}{' '}
+                      <button
+                        type="button"
+                        className="rmv-fvt-btn"
+                        onClick={() =>
+                          this.props.removingFromFavorites(favorite.id)
+                        }
+                      >
+                        x
+                      </button>
+                    </li>
                   ))}
                 </ul>
               </div>
@@ -117,7 +141,8 @@ const mapStateToProps = state => ({
 });
 
 const mapDispatchToProps = dispatch => ({
-  fetchAllMovies: () => dispatch(fetchAllMovies())
+  fetchAllMovies: () => dispatch(fetchAllMovies()),
+  removingFromFavorites: id => dispatch(removingFromFavorites(id))
 });
 
 export default connect(

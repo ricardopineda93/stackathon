@@ -7,12 +7,14 @@ import './navbarStyle.css';
 const Navbar = ({ handleLogOut, isLoggedIn }) => (
   <div id="container">
     <header>
-      <h1 className="first">nyscene.</h1>
-      <h1 className="second">nyscene.</h1>
-      <h1 className="third">nyscene.</h1>
+      <Link to="/">
+        <h1 className="first">nyscene.</h1>
+        <h1 className="second">nyscene.</h1>
+        <h1 className="third">nyscene.</h1>
+      </Link>
       {isLoggedIn ? (
         <div className="nav">
-          <a href="#" onClick={handleLogOut} id="brand-name">
+          <a href="#" onClick={handleLogOut}>
             Logout
           </a>
         </div>
@@ -32,8 +34,8 @@ const mapStateToProps = state => {
 const mapDispatchToProps = dispatch => {
   return {
     handleLogOut() {
-      dispatch(logout());
       dispatch(resettingFavorites());
+      dispatch(logout());
     }
   };
 };

@@ -12,6 +12,7 @@ import mapStyles from '../../mapStyle';
 import { fetchMovie, addingToFavorites } from '../reducers/index';
 import { connect } from 'react-redux';
 import { geolocated } from 'react-geolocated';
+import { history } from '../history';
 
 //does the recenter work?
 
@@ -93,14 +94,25 @@ const Map = compose(
                 </a>
                 <br />
                 <br />
-                <button
-                  type="button"
-                  onClick={() =>
-                    props.addingToFavorites(props.favorites, movie.id)
-                  }
-                >
-                  Add to favorites
-                </button>
+                {props.isLoggedIn ? (
+                  <button
+                    type="button"
+                    className="btn btn-primary btn-sm"
+                    onClick={() =>
+                      props.addingToFavorites(props.favorites, movie.id)
+                    }
+                  >
+                    Add to favorites
+                  </button>
+                ) : (
+                  <button
+                    type="button"
+                    className="btn btn-danger btn-sm"
+                    onClick={() => history.push('/login')}
+                  >
+                    Log In to Add Favorites!
+                  </button>
+                )}
               </p>
             </div>
           </InfoWindow>
@@ -112,7 +124,8 @@ const Map = compose(
 
 const mapStateToProps = state => ({
   selectedMovie: state.omdbMovie.selectedMovie,
-  favorites: state.favorites
+  favorites: state.favorites,
+  isLoggedIn: !!state.user.id
 });
 const mapDispatchToProps = dispatch => ({
   fetchMovie: imdbId => dispatch(fetchMovie(imdbId)),
@@ -122,6 +135,8 @@ const mapDispatchToProps = dispatch => ({
     };
     if (favorites.some(alreadyInFavorites) === false) {
       dispatch(addingToFavorites(movieId));
+    } else {
+      alert('This movie is already in your favorites!');
     }
   }
 });

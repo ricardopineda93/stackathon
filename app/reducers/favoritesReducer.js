@@ -37,7 +37,7 @@ export const addingToFavorites = id => async dispatch => {
 
 export const removingFromFavorites = id => async dispatch => {
   try {
-    await axios.delete('/api/favorites', { id });
+    await axios.delete(`/api/favorites/${id}`);
     dispatch(removedFromFavorites(id));
   } catch (error) {
     console.error(error);
@@ -46,7 +46,7 @@ export const removingFromFavorites = id => async dispatch => {
 
 export const resettingFavorites = () => dispatch => {
   try {
-    dispatch(resettedFavorites);
+    dispatch(resettedFavorites());
   } catch (error) {
     console.error(error);
   }

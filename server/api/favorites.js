@@ -41,10 +41,10 @@ router.post('/', async (req, res, next) => {
   }
 });
 
-router.delete('/', async (req, res, next) => {
+router.delete('/:id', async (req, res, next) => {
   try {
     if (req.user) {
-      const { id } = req.body;
+      const { id } = req.params;
       const affectedRows = await Favorite.destroy({
         where: {
           id
