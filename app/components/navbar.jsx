@@ -8,14 +8,14 @@ import './navbarStyle.css';
 
 const Navbar = ({ email, handleLogOut, isLoggedIn }) => (
   <div id="container">
-    <header>
+    <header className="grit">
       <Link to="/">
         <h1 className="first">nyscene.</h1>
         <h1 className="second">nyscene.</h1>
         <h1 className="third">nyscene.</h1>
       </Link>
       {isLoggedIn ? (
-        <div className="nav">
+        <div className="nav grit">
           Welcome back, {/.+?(?=@)/.exec(email)}!{' | '}
           <a href="#" onClick={handleLogOut}>
             Logout

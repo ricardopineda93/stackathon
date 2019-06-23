@@ -61,7 +61,7 @@ class Root extends Component {
     return (
       <div id="container">
         <main>
-          <aside>
+          <aside className="grit">
             <div className="panel" id="options-panel">
               <div>
                 <h2>Radius: {this.state.distanceFilter} mile(s)</h2>
@@ -151,9 +151,7 @@ class Root extends Component {
           <div id="map-container">
             <Map
               allMovies={allMovies}
-              googleMapURL={`https://maps.googleapis.com/maps/api/js?key=${
-                process.env.GOOGLE_API_KEY
-              }&v=3.exp&libraries=geometry,drawing,places`}
+              googleMapURL={`https://maps.googleapis.com/maps/api/js?key=AIzaSyBz2Yp_ZcjaR9U5VNWeUFz0FK0Qu1eNhLw&v=3.exp&libraries=geometry,drawing,places`}
               loadingElement={<div style={{ height: `100%` }} />}
               containerElement={<div style={{ height: `100%` }} />}
               mapElement={<div style={{ height: `100%` }} />}

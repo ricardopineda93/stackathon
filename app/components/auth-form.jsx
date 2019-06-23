@@ -8,8 +8,11 @@ const AuthForm = props => {
   const { name, displayName, handleSubmit, error } = props;
 
   return (
-    <div className="loginPageContainer">
-      <h3> {name === 'login' ? 'Welcome back.' : 'Sign on up.'} </h3>
+    <div className="loginPageContainer grit">
+      <h3 className="greeting">
+        {' '}
+        {name === 'login' ? 'Log on in.' : 'Sign on up.'}{' '}
+      </h3>
       <div className="loginPage">
         <form onSubmit={handleSubmit} name={name} id="auth-form">
           <div className="form-group">
@@ -34,18 +37,18 @@ const AuthForm = props => {
               placeholder="Password"
             />
           </div>
+          {error && error.response && <small> {error.response.data} </small>}
           <div>
-            <button className="btn btn-success" type="submit">
+            <button className="btn grit left" type="submit">
               {displayName}
             </button>
             <div className="divider" />
             <a href="/auth/google">
-              <button className="btn btn-danger" type="button">
+              <button className="btn grit" type="button">
                 {displayName} with Google
               </button>
             </a>
           </div>
-          {error && error.response && <div> {error.response.data} </div>}
         </form>
       </div>
     </div>

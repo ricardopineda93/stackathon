@@ -103,13 +103,14 @@ const Map = compose(
           props.selectedFavorite.movieId === movie.id) && (
           <InfoWindow onCloseClick={() => props.removeSelected}>
             <div>
-              <h4>
+              <h6>
                 {props.selectedMovie.Title}{' '}
                 <small>
                   <i>({props.selectedMovie.Year})</i>
                 </small>
-              </h4>
+              </h6>
               <img src={props.selectedMovie.Poster} height="250" width="190" />
+              <br />
               <p>{movie.locationDetails}</p>
               <p>
                 {movie.neighborhood},<br />
@@ -123,7 +124,7 @@ const Map = compose(
                 {props.isLoggedIn ? (
                   <button
                     type="button"
-                    className="btn btn-success btn-sm"
+                    className="btn left btn-sm"
                     onClick={() =>
                       props.addingToFavorites(props.favorites, movie)
                     }
@@ -133,7 +134,7 @@ const Map = compose(
                 ) : (
                   <button
                     type="button"
-                    className="btn btn-danger btn-sm"
+                    className="btn left btn-sm"
                     onClick={() => history.push('/login')}
                   >
                     Log In to Add Favorites!

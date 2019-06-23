@@ -1,12 +1,9 @@
 @import url(https://fonts.googleapis.com/css?family=Special+Elite:regular);
-@import url(
-  https://fonts.googleapis.com/css?family=Oswald:200,
-  300,
-  regular,
-  500,
-  600,
-  700
-);
+
+.grit {
+  -webkit-mask-image: url('http://support.nature.org/images/earth/assets/grit.png');
+  mask-image: url('http://support.nature.org/images/earth/assets/grit.png');
+}
 
 h1 {
   margin: '15px';
@@ -46,7 +43,7 @@ header {
   justify-content: center;
   height: 3rem;
   padding: 0 1rem;
-  background-color: whitesmoke;
+  background-color: #a8d0e6;
   position: fixed;
   width: 100%;
   z-index: 1000;
