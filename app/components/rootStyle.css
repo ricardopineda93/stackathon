@@ -51,7 +51,7 @@ aside {
 }
 
 .panel > div:first-child {
-  margin-top: 0;
+  margin-top: 0.75em;
 }
 
 select {

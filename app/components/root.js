@@ -107,7 +107,7 @@ class Root extends Component {
                   +
                 </button>
               </div>
-              <div>
+              {/* <div>
                 <h2>Filter</h2>
                 <select id="neighborhood-choices">
                   <option>By Neighborhood</option>
@@ -119,7 +119,7 @@ class Root extends Component {
                 >
                   +
                 </button>
-              </div>
+              </div> */}
             </div>
             <div className="panel" id="itinerary">
               <div>
