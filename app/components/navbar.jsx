@@ -4,7 +4,9 @@ import { Link } from 'react-router-dom';
 import { logout, resettingFavorites } from '../reducers/index';
 import './navbarStyle.css';
 
-const Navbar = ({ handleLogOut, isLoggedIn }) => (
+// const pattern = /.+?(?=abc)/;
+
+const Navbar = ({ email, handleLogOut, isLoggedIn }) => (
   <div id="container">
     <header>
       <Link to="/">
@@ -14,6 +16,7 @@ const Navbar = ({ handleLogOut, isLoggedIn }) => (
       </Link>
       {isLoggedIn ? (
         <div className="nav">
+          Welcome back, {/.+?(?=@)/.exec(email)}!{' | '}
           <a href="#" onClick={handleLogOut}>
             Logout
           </a>
@@ -28,7 +31,7 @@ const Navbar = ({ handleLogOut, isLoggedIn }) => (
 );
 
 const mapStateToProps = state => {
-  return { isLoggedIn: !!state.user.id };
+  return { isLoggedIn: !!state.user.id, email: state.user.email };
 };
 
 const mapDispatchToProps = dispatch => {

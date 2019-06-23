@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
 import Map from './Map';
 import { connect } from 'react-redux';
-import { fetchAllMovies, removingFromFavorites } from '../reducers/index';
+import {
+  fetchAllMovies,
+  removingFromFavorites,
+  settingSelectedFavorite,
+  fetchMovie
+} from '../reducers/index';
 import './rootStyle.css';
 if (process.env.NODE_ENV !== 'production') require('../../secrets');
 import 'react-toastify/dist/ReactToastify.css';
@@ -44,8 +49,9 @@ class Root extends Component {
     });
   };
 
-  onFavoritedClick = e => {
-    // Ugh.
+  onSelectingFavorite = async favorite => {
+    await this.props.fetchMovie(favorite.movie.imdbId);
+    this.props.settingSelectedFavorite(favorite);
   };
 
   render() {
@@ -132,7 +138,7 @@ class Root extends Component {
                       </button>
                       <a
                         id={favorite.movie.id}
-                        onClick={e => this.onFavoritedClick(e)}
+                        onClick={() => this.onSelectingFavorite(favorite)}
                       >
                         "{favorite.movie.film}" / {favorite.movie.neighborhood}
                       </a>
@@ -162,7 +168,8 @@ class Root extends Component {
 
 const mapStateToProps = state => ({
   allMovies: state.allMovies.allMovies,
-  favorites: state.favorites
+  favorites: state.favorites.allFavorites,
+  selectedFavorite: state.favorites.selectedFavorite
 });
 
 const mapDispatchToProps = dispatch => ({
@@ -170,6 +177,12 @@ const mapDispatchToProps = dispatch => ({
   removingFromFavorites: favorite => {
     dispatch(removingFromFavorites(favorite.id));
     notifyRemovedFavorite(favorite.movie.film, favorite.movie.neighborhood);
+  },
+  settingSelectedFavorite: favorite => {
+    dispatch(settingSelectedFavorite(favorite));
+  },
+  fetchMovie: imdbId => {
+    dispatch(fetchMovie(imdbId));
   }
 });
 

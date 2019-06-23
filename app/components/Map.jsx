@@ -9,7 +9,11 @@ import {
   Circle
 } from 'react-google-maps';
 import mapStyles from '../../mapStyle';
-import { fetchMovie, addingToFavorites } from '../reducers/index';
+import {
+  fetchMovie,
+  addingToFavorites,
+  removingSelectedFavorite
+} from '../reducers/index';
 import { connect } from 'react-redux';
 import { geolocated } from 'react-geolocated';
 import { history } from '../history';
@@ -82,11 +86,12 @@ const Map = compose(
     )}
     {props.allMovies.map(movie => (
       <Marker
-        onClick={() =>
+        onClick={() => {
           props
             .fetchMovie(movie.imdbId)
-            .then(() => props.onMarkerClicked(movie.id))
-        }
+            .then(() => props.onMarkerClicked(movie.id));
+          props.removingSelectedFavorite();
+        }}
         filmTitle={movie.film}
         key={movie.id}
         position={{ lat: +movie.lat, lng: +movie.lng }}
@@ -94,7 +99,8 @@ const Map = compose(
           url: 'http://maps.google.com/mapfiles/kml/pal2/icon30.png'
         }}
       >
-        {props.currentlySelected === movie.id && (
+        {(props.currentlySelected === movie.id ||
+          props.selectedFavorite.movieId === movie.id) && (
           <InfoWindow onCloseClick={() => props.removeSelected}>
             <div>
               <h4>
@@ -144,7 +150,8 @@ const Map = compose(
 
 const mapStateToProps = state => ({
   selectedMovie: state.omdbMovie.selectedMovie,
-  favorites: state.favorites,
+  favorites: state.favorites.allFavorites,
+  selectedFavorite: state.favorites.selectedFavorite,
   isLoggedIn: !!state.user.id
 });
 const mapDispatchToProps = dispatch => ({
@@ -159,7 +166,8 @@ const mapDispatchToProps = dispatch => ({
     } else {
       notifyAlreadyExistingFavorite();
     }
-  }
+  },
+  removingSelectedFavorite: () => dispatch(removingSelectedFavorite())
 });
 
 export default geolocated({
