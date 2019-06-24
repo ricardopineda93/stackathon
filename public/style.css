@@ -1,4 +1,10 @@
+.grit {
+  -webkit-mask-image: url('http://support.nature.org/images/earth/assets/grit.png');
+  mask-image: url('http://support.nature.org/images/earth/assets/grit.png');
+}
+
 body {
   margin: 0;
-  background-color: whitesmoke;
+  background-color: #edc7b7;
+  background-color: #a8d0e6;
 }
